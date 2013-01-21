@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Client</title>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+	  var socket = io.connect('http://localhost:8000');
+	  socket.on('news', function (data) {
+	    console.log('on client ---> ' + data);
+	    socket.emit('trigger client_event', { my: 'data' });
+	  });
+	</script>	
+</head>
+<body>
+	<h1>Hello World</h1>
+</body>
+</html>
