@@ -2,16 +2,66 @@
 <html>
 <head>
 	<title>Client</title>
+	<script type="text/javascript" src="jquery-1.9.0.min.js"></script>
 	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript">
-	  var socket = io.connect('http://localhost:8000');
-	  socket.on('news', function (data) {
-	    console.log('on client ---> ' + data);
-	    socket.emit('trigger client_event', { my: 'data' });
-	  });
+	  	var socket = io.connect('http://localhost:8000');
+	  	var local = {
+	  		name: ""
+	  	}
+		socket.on('connect', function () {
+			console.log('connect!');
+		});
+
+		var setName = function (name) {
+			socket.emit('set name', name);
+			local.name = name;
+		}
+		var sendMsg = function (name, data) {
+			socket.emit('send msg', {
+				from: name,
+				content: data
+			})
+		}
+		var isMyself = function (name) {
+			if (name === local.name) return true;
+		}
+
+		socket.on('receive msg', function (data) {
+			console.log(data);
+			// if (isMyself(data.from)) {
+			// 	console.log("this msg is from myself");
+			// 	return;
+			// }
+
+			// console.log(data.content);
+		})
 	</script>	
 </head>
 <body>
+	<label>Name</label>
+	<input type="text" id="name">
+	<button id="btn-name">name</button>
+	<br>
+	<label>Message</label>
+	<textarea id="msg" rows="10" cols="30"></textarea>
+	<button id="btn-msg">msg</button>
+
 	<h1>Hello World</h1>
+	<script type="text/javascript">
+		$(function () {
+			$('#btn-name').click(function () {
+				var name = $('#name').val();
+				setName(name);
+			})
+
+			$('#btn-msg').click(function () {
+				var msg = $('#msg').val(),
+				name = $('#name').val();
+
+				sendMsg(name, msg);
+			})
+		})
+	</script>
 </body>
 </html>
