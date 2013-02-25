@@ -49,7 +49,7 @@ app.configure(function () {
 	app.use(express.bodyParser());
 	app.set('view engine', 'ejs');
 	app.set('views', __dirname + '/views');
-})
+}) 
 
 
 //router
